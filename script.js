@@ -3,6 +3,8 @@ let cart = [];
 let currentRecommendation = null;
 
 function addToCart(name, price) {
+    console.log('Adding to cart:', name, price);
+    
     // Check if item already exists in cart
     const existingItem = cart.find(item => item.name === name);
     
@@ -102,24 +104,28 @@ function checkout() {
 function showCartNotification(itemName) {
     // Simple notification that item was added
     const notification = document.createElement('div');
+    notification.className = 'cart-notification';
     notification.style.cssText = `
         position: fixed;
         top: 100px;
         right: 2rem;
-        background: var(--primary-green);
+        background: #00D084;
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 50px;
         box-shadow: 0 10px 30px rgba(0, 208, 132, 0.3);
-        z-index: 1000;
-        animation: slideDown 0.3s ease-out;
+        z-index: 1001;
         font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        animation: slideDown 0.3s ease-out;
     `;
     notification.textContent = `✓ ${itemName} added to cart!`;
     document.body.appendChild(notification);
     
     setTimeout(() => {
-        notification.style.animation = 'fadeOut 0.3s ease-out forwards';
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateY(-20px)';
+        notification.style.transition = 'all 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
     }, 2000);
 }
@@ -143,6 +149,23 @@ let currentQuestion = 1;
 document.addEventListener('DOMContentLoaded', function() {
     initializeRecommender();
     initializeChatbot();
+    
+    // Make sure all functions are globally available for onclick handlers
+    window.addToCart = addToCart;
+    window.addRecommendedToCart = addRecommendedToCart;
+    window.removeFromCart = removeFromCart;
+    window.updateQuantity = updateQuantity;
+    window.toggleCart = toggleCart;
+    window.checkout = checkout;
+    window.scrollToSection = scrollToSection;
+    window.resetRecommender = resetRecommender;
+    window.askQuestion = askQuestion;
+    window.sendMessage = sendMessage;
+    
+    // Initialize cart display
+    updateCart();
+    
+    console.log('All systems initialized - cart, scroll, AI features ready');
 });
 
 function initializeRecommender() {
